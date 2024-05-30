@@ -16,4 +16,13 @@ export class User {
 
     @Column()
     email: string;
+
+    @Column()
+    provider: string;
+
+    @Column()
+    role: string;
+
+    @Column()
+    key: string;
 }

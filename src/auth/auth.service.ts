@@ -25,7 +25,6 @@ export class AuthService {
     const newUser = this.userRepository.create({
       given_name: details.given_name,
       family_name: details.family_name,
-      picture: details.picture,
       email: details.email,
     });
     return this.userRepository.save(newUser);
