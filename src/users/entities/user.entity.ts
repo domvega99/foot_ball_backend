@@ -12,6 +12,9 @@ export class User {
     family_name: string;
 
     @Column()
+    password: string;
+
+    @Column()
     picture: string;
 
     @Column()
