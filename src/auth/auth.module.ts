@@ -6,17 +6,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { SessionSerializer } from './utils/Serializer';
 import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { ConfigModule } from '@nestjs/config';
+import { FacebookStrategy } from './utils/FacebookStrategy';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]), // Provide UserRepository
+    TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: 'your-secret-key', // Replace with your own secret key
-      signOptions: { expiresIn: '1h' }, // Optional: Set token expiration time
+      secret: 'your-secret-key', 
+      signOptions: { expiresIn: '1h' }, 
     }),
+    PassportModule.register({ defaultStrategy: 'facebook' }),
+    ConfigModule.forRoot(),
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, SessionSerializer,
+  providers: [AuthService, GoogleStrategy, SessionSerializer, FacebookStrategy,
     {
       provide: 'AUTH_SERVICE',
       useClass: AuthService,

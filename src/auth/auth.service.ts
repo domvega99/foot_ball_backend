@@ -30,7 +30,38 @@ export class AuthService {
       given_name: details.given_name,
       family_name: details.family_name,
       email: details.email,
+      facebookId: details.facebookId,
+      picture: details.picture || null,
+      provider: 'Google',
+      role: details.role || 'User', 
+      key: details.key || null,  
     });
+    return this.userRepository.save(newUser);
+  }
+
+  async validateFBUser(details: UserDetails): Promise<User> {
+    console.log('AuthService: Validating FB User');
+    console.log(details);
+    const user = await this.userRepository.findOneBy({
+      facebookId: details.facebookId,
+    });
+    if (user) {
+      console.log('User found');
+      return user;
+    }
+
+    console.log('User not found. Creating ...');
+    const newUser = this.userRepository.create({
+      given_name: details.given_name,
+      family_name: details.family_name,
+      email: details.email,
+      facebookId: details.facebookId,
+      picture: details.picture || null,
+      provider: 'Facebook',
+      role: details.role || 'User', 
+      key: details.key || null, 
+    });
+
     return this.userRepository.save(newUser);
   }
 

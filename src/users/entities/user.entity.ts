@@ -11,21 +11,24 @@ export class User {
     @Column()
     family_name: string;
 
-    @Column()
+    @Column({ nullable: true })
     password: string;
 
-    @Column()
+    @Column({ nullable: true })
     picture: string;
 
-    @Column()
+    @Column({ nullable: true })
     email: string;
 
-    @Column()
+    @Column({ nullable: true })
     provider: string;
 
-    @Column()
+    @Column({ nullable: true })
     role: string;
 
-    @Column()
+    @Column({ nullable: true })
     key: string;
+
+    @Column({ nullable: true })
+    facebookId: number;
 }

@@ -6,11 +6,33 @@ import { GoogleAuthGuard } from './utils/Guards';
 import { User } from 'src/types/user.interface';
 import * as jwt from 'jsonwebtoken';
 import { LoginDto } from './dto/login-auth.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
   private readonly JWT_SECRET = 'secretkeyjwt';
   constructor(private readonly authService: AuthService) {}
+
+  @Get('facebook')
+  @UseGuards(AuthGuard('facebook'))
+  async facebookLogin(): Promise<any> {
+    return { msg: 'Facebook Authentication' };
+  }
+
+  @Get('facebook/callback')
+  @UseGuards(AuthGuard('facebook'))
+  async facebookLoginCallback(@Req() req): Promise<any> {
+
+    const user = req.user;
+    const payload = {
+      sub: user.id,
+      fid: user.facebookId,
+      given_name: user.first_name,
+    };
+    const token = jwt.sign(payload, this.JWT_SECRET);
+
+    return token;
+  }
 
   @Get('google/login')
   @UseGuards(GoogleAuthGuard)
