@@ -5,6 +5,7 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import { GoogleAuthGuard } from './utils/Guards';
 import { User } from 'src/types/user.interface';
 import * as jwt from 'jsonwebtoken';
+import { LoginDto } from './dto/login-auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -54,5 +55,10 @@ export class AuthController {
     res.clearCookie('key');
     req.session = null;
     res.status(200).json({ message: 'Logout successful' });
+  }
+
+  @Post('login')
+  async login(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
+    return this.authService.loginUser(loginDto);
   }
 }
