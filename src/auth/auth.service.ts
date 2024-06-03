@@ -72,22 +72,18 @@ export class AuthService {
 
   async loginUser(loginDto: LoginDto): Promise<{ accessToken: string }> {
     const { email, password } = loginDto;
-    // Find the user by email
     const user = await this.userRepository.findOne({ where: { email } });
-    // Check if the user exists
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    // Check if the password is correct
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    // Generate and return JWT token
     const accessToken = this.generateJwtToken(user.id, user.email, user.given_name);
     return { accessToken };
   }
-
+  
   private generateJwtToken(sid: number, email: string, given_name: string): string {
     const payload = { sid, email, given_name };
     return this.jwtService.sign(payload);
