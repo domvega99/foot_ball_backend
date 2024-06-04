@@ -10,28 +10,19 @@ import { UploadModule } from './upload/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { PassportModule } from '@nestjs/passport';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ormconfig } from 'ormconfig';
 
 @Module({
   imports: [
-    // TypeOrmModule.forRoot({
-    //   type: 'mysql',
-    //   host: 'localhost',
-    //   port: 3306,
-    //   username: 'flower_shop_root',
-    //   password: 'R!qx4453w',
-    //   database: 'flower_shop_db',
-    //   entities: [__dirname + '/**/*.entity{.ts,.js}'],
-    //   synchronize: false, // Only for development. Should be false in production.
-    // }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'flower_shop_db',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false, 
+    ConfigModule.forRoot({
+      envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
+      isGlobal: true, // Makes ConfigService available globally
+    }),
+
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: ormconfig,
     }),
     ProductsModule,
     EmployeesModule,

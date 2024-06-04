@@ -7,11 +7,12 @@ import { User } from 'src/types/user.interface';
 import * as jwt from 'jsonwebtoken';
 import { LoginDto } from './dto/login-auth.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
   private readonly JWT_SECRET = 'secretkeyjwt';
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly configService: ConfigService,) {}
 
   @Get('facebook')
   @UseGuards(AuthGuard('facebook'))
@@ -52,7 +53,8 @@ export class AuthController {
     };
     const token = jwt.sign(payload, this.JWT_SECRET);
     res.cookie('key', token);
-    res.redirect('http://localhost:4200/home');
+    const redirectUrl = this.configService.get<string>('CLIENT_URL');
+    res.redirect(redirectUrl);
   }
 
   @Get('status')
