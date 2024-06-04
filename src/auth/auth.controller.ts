@@ -21,7 +21,7 @@ export class AuthController {
 
   @Get('facebook/callback')
   @UseGuards(AuthGuard('facebook'))
-  async facebookLoginCallback(@Req() req): Promise<any> {
+  async facebookLoginCallback(@Req() req: any, @Res() res: any) {
 
     const user = req.user;
     const payload = {
@@ -30,8 +30,8 @@ export class AuthController {
       given_name: user.first_name,
     };
     const token = jwt.sign(payload, this.JWT_SECRET);
-
-    return token;
+    res.cookie('key', token);
+    res.redirect('http://localhost:4200/home');
   }
 
   @Get('google/login')

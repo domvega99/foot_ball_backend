@@ -30,5 +30,5 @@ export class User {
     key: string;
 
     @Column({ nullable: true })
-    facebookId: number;
+    facebookId: string;
 }
