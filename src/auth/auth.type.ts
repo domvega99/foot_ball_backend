@@ -7,5 +7,5 @@ export type UserDetails = {
     role?: string,
     password?: string,
     key?: string,
-    facebookId?: string
+    socialId?: string
 }

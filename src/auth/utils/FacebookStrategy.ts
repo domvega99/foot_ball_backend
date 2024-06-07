@@ -23,7 +23,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy) {
         const profiles = profile._json;
 
         const user = await this.authService.validateFBUser({ 
-            facebookId: profiles.id,
+            socialId: profiles.id,
             given_name: profiles.first_name,
             family_name: profiles.last_name,
         });

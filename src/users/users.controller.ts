@@ -17,23 +17,12 @@ export class UsersController {
     }
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.usersService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.usersService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.usersService.update(+id, updateUserDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.usersService.remove(+id);
-  // }
+  @Post('google/register')
+  async googleRegister(@Body() userData: CreateUserDto): Promise<User> {
+    try {
+      return await this.usersService.registerGoogleUser(userData);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
 }

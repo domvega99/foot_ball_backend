@@ -30,7 +30,7 @@ export class AuthService {
       given_name: details.given_name,
       family_name: details.family_name,
       email: details.email,
-      facebookId: details.facebookId,
+      socialId: details.socialId,
       picture: details.picture || null,
       provider: 'Google',
       role: details.role || 'User', 
@@ -43,7 +43,7 @@ export class AuthService {
     console.log('AuthService: Validating FB User');
     console.log(details);
     const user = await this.userRepository.findOneBy({
-      facebookId: details.facebookId,
+      socialId: details.socialId,
     });
     if (user) {
       console.log('User found');
@@ -55,7 +55,7 @@ export class AuthService {
       given_name: details.given_name,
       family_name: details.family_name,
       email: details.email,
-      facebookId: details.facebookId,
+      socialId: details.socialId,
       picture: details.picture || null,
       provider: 'Facebook',
       role: details.role || 'User', 

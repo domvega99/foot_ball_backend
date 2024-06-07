@@ -7,6 +7,7 @@ import { Team } from 'src/football/teams/entities/team.entity';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
+import { UserDetails } from 'src/auth/auth.type';
 
 @Injectable()
 export class UsersService {
@@ -27,20 +28,12 @@ export class UsersService {
     return result;
   }
 
-  
-
-  async registerUser(userData: CreateUserDto): Promise<User> {
-
-    // Check if the email already exists
+  async registerUser(userData: CreateUserDto): Promise<User> {  
     const existingUser = await this.userRepository.findOne({ where: { email: userData.email } });
     if (existingUser) {
       throw new Error('Email already exists');
     }
-    
-    // Hash the password
     const hashedPassword = await bcrypt.hash(userData.password, 10);
-
-    // Create a new user entity
     const user = new User();
     user.family_name = userData.family_name;
     user.given_name = userData.given_name;
@@ -48,33 +41,21 @@ export class UsersService {
     user.password = hashedPassword;
     user.role = 'User';
     user.key = this.generateRandomString(20);
-
-    // Save the user to the database
     const savedUser = await this.userRepository.save(user);
-
-    // Return the saved user data
     return savedUser;
   }
 
-  // async findAll(): Promise<Team[]> {
-  //   return this.teamRepository.find();
-  // }
-
-  // async findById(id: number): Promise<Team> {
-  //   const team = await this.teamRepository.findOne({ where: { id: id } });
-  //   if (!team) {
-  //     throw new NotFoundException('Team not found');
-  //   }
-  //   return team;
-  // }
-
-  // async update(id: number, teamData: Partial<Team>): Promise<Team> {
-  //   const team = await this.findById(id);
-  //   return this.teamRepository.save({ ...team, ...teamData });
-  // }
-
-  // async remove(id: number): Promise<void> {
-  //   const team = await this.findById(id);
-  //   await this.teamRepository.remove(team);
-  // }
+  async registerGoogleUser(userData: UserDetails): Promise<User> {
+    const existingUser = await this.userRepository.findOneBy({  email: userData.email });
+    if (existingUser) return existingUser;
+    const user = new User();
+    user.family_name = userData.family_name;
+    user.given_name = userData.given_name;
+    user.email = userData.email;
+    user.role = 'User';
+    user.provider = 'Google'
+    user.socialId = userData.socialId;
+    const savedUser = await this.userRepository.save(user);
+    return savedUser;
+  }
 }
