@@ -8,6 +8,12 @@ import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { UserDetails } from 'src/auth/auth.type';
+import * as jwt from 'jsonwebtoken';
+
+interface RegistrationResponse {
+  token?: string;
+  user: User;
+}
 
 @Injectable()
 export class UsersService {
@@ -44,18 +50,41 @@ export class UsersService {
     const savedUser = await this.userRepository.save(user);
     return savedUser;
   }
+  
 
   async registerGoogleUser(userData: UserDetails): Promise<User> {
     const existingUser = await this.userRepository.findOneBy({  email: userData.email });
     if (existingUser) return existingUser;
+      const user = new User();
+      user.family_name = userData.family_name;
+      user.given_name = userData.given_name;
+      user.email = userData.email;
+      user.role = 'User';
+      user.provider = 'Google'
+      user.socialId = userData.socialId;
+      const savedUser = await this.userRepository.save(user);
+    return savedUser;
+  }
+
+  async registerFacebookUser(userData: UserDetails): Promise<RegistrationResponse> {
+    const existingUser = await this.userRepository.findOneBy({  socialId: userData.socialId });
+    if (existingUser) {
+      const token = jwt.sign({ socialId: existingUser.socialId, given_name: existingUser.given_name }, existingUser.key);
+      console.log(token);
+      return { token, user: existingUser }; 
+    }
     const user = new User();
     user.family_name = userData.family_name;
     user.given_name = userData.given_name;
     user.email = userData.email;
     user.role = 'User';
-    user.provider = 'Google'
+    user.provider = 'Facebook'
     user.socialId = userData.socialId;
+    user.key = this.generateRandomString(20);
+    
     const savedUser = await this.userRepository.save(user);
-    return savedUser;
+    const token = jwt.sign({ socialId: savedUser.socialId, given_name: savedUser.given_name }, user.key);
+    console.log(token)
+    return { token, user: savedUser };
   }
 }

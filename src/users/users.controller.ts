@@ -25,4 +25,18 @@ export class UsersController {
       throw new BadRequestException(error.message);
     }
   }
+
+  @Post('facebook/register')
+  async facebookRegister(@Body() userData: CreateUserDto): Promise<any> {
+    try {
+      const registrationResult = await this.usersService.registerFacebookUser(userData);
+      if (registrationResult.token) {
+        return { token: registrationResult.token, user: registrationResult.user };
+      } else {
+        return registrationResult.user;
+      }
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
 }
