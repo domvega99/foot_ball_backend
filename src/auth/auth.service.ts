@@ -17,7 +17,66 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(details: UserDetails) {
+  async findUser(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+    return user;
+  }
+
+  async loginUser(loginDto: LoginDto): Promise<{ accessToken: string }> {
+    const { email, password } = loginDto;
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    const accessToken = this.generateJwtToken(user.id, user.email, user.given_name, user.key);
+    return { accessToken };
+  }
+  
+  private generateJwtToken(sid: number, email: string, given_name: string, key: string): string {
+    const payload = {
+      sid,
+      email,
+      given_name,
+      iss: key 
+    };
+    return this.jwtService.sign(payload);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+async validateGoogleUser(details: UserDetails) {
     console.log('AuthService');
     console.log(details);
     const user = await this.userRepository.findOneBy({
@@ -63,30 +122,6 @@ export class AuthService {
     });
 
     return this.userRepository.save(newUser);
-  }
-
-  async findUser(id: number) {
-    const user = await this.userRepository.findOneBy({ id });
-    return user;
-  }
-
-  async loginUser(loginDto: LoginDto): Promise<{ accessToken: string }> {
-    const { email, password } = loginDto;
-    const user = await this.userRepository.findOne({ where: { email } });
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-    const accessToken = this.generateJwtToken(user.id, user.email, user.given_name);
-    return { accessToken };
-  }
-  
-  private generateJwtToken(sid: number, email: string, given_name: string): string {
-    const payload = { sid, email, given_name };
-    return this.jwtService.sign(payload);
   }
   
 

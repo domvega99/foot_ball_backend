@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
 import { FacebookStrategy } from './utils/FacebookStrategy';
+import { AuthMiddleware } from 'src/middleware/auth.middleware';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { FacebookStrategy } from './utils/FacebookStrategy';
     ConfigModule.forRoot(),
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, SessionSerializer, FacebookStrategy,
+  providers: [AuthService, GoogleStrategy, SessionSerializer, FacebookStrategy, AuthMiddleware,
     {
       provide: 'AUTH_SERVICE',
       useClass: AuthService,

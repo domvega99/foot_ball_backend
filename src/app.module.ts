@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,17 +12,25 @@ import { UsersModule } from './users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ormconfig } from 'ormconfig';
+import { AuthMiddleware } from './middleware/auth.middleware';
+import { UsersController } from './users/users.controller';
+import { JwtModule } from '@nestjs/jwt';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
-      isGlobal: true, // Makes ConfigService available globally
+      isGlobal: true,
     }),
-
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: ormconfig,
+    }),
+    TypeOrmModule.forFeature([User]), // Import TypeOrmModule with User entity
+    JwtModule.register({
+      secret: 'your-secret-key',
+      signOptions: { expiresIn: '1h' },
     }),
     ProductsModule,
     EmployeesModule,
@@ -34,6 +42,18 @@ import { ormconfig } from 'ormconfig';
     PassportModule.register({ session: true }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AuthMiddleware], // Provide AuthMiddleware here if necessary
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .exclude(
+        { path: 'users/register', method: RequestMethod.ALL },
+        { path: 'users/google/register', method: RequestMethod.ALL },
+        { path: 'users/facebook/register', method: RequestMethod.ALL },
+        // Add more routes to exclude here
+      )
+      .forRoutes(UsersController);
+  }
+}

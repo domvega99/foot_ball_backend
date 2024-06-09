@@ -10,6 +10,6 @@ export const ormconfig = async (configService: ConfigService): Promise<TypeOrmMo
     password: configService.get('DB_PASSWORD'),
     database: configService.get('DB_DATABASE'),
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
-    synchronize: true, // for development only, set to false in production
+    synchronize: false, // for development only, set to false in production
   };
 };

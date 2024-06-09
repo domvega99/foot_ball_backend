@@ -23,7 +23,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
         console.log(accessToken);
         console.log(refreshToken);
         console.log(profile);
-        const user = await this.authService.validateUser({ 
+        const user = await this.authService.validateGoogleUser({ 
             given_name: profile.name.givenName,
             family_name: profile.name.familyName,
             picture: profile.profileUrl,
