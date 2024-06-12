@@ -16,6 +16,8 @@ import { AuthMiddleware } from './middleware/auth.middleware';
 import { UsersController } from './users/users.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { User } from './users/entities/user.entity';
+import { LeaguesModule } from './football/leagues/leagues.module';
+import { LeagueTeamsModule } from './football/league_teams/league_teams.module';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { User } from './users/entities/user.entity';
     AuthModule,
     UsersModule,
     PassportModule.register({ session: true }),
+    LeaguesModule,
+    LeagueTeamsModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthMiddleware], // Provide AuthMiddleware here if necessary
