@@ -18,6 +18,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { User } from './users/entities/user.entity';
 import { LeaguesModule } from './football/leagues/leagues.module';
 import { LeagueTeamsModule } from './football/league_teams/league_teams.module';
+import { MatchesModule } from './football/matches/matches.module';
+import { ScoresModule } from './football/scores/scores.module';
 
 @Module({
   imports: [
@@ -44,6 +46,8 @@ import { LeagueTeamsModule } from './football/league_teams/league_teams.module';
     PassportModule.register({ session: true }),
     LeaguesModule,
     LeagueTeamsModule,
+    MatchesModule,
+    ScoresModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthMiddleware], // Provide AuthMiddleware here if necessary
