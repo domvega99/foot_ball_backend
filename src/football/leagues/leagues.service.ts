@@ -21,6 +21,17 @@ export class LeaguesService {
     return this.leagueRepository.find();
   }
 
+  async findAllLeaguesWithTeams(): Promise<League[]> {
+    return this.leagueRepository
+      .createQueryBuilder('league')
+      .leftJoinAndSelect('league.teams', 'leagueTeam')
+      .leftJoinAndSelect('leagueTeam.team', 'team')
+      .where('league.stat = :leagueStat', { leagueStat: 1 })
+      .andWhere('leagueTeam.stat = :teamStat', { teamStat: 1 })
+      .andWhere('league.status = :leagueStatus', { leagueStatus: 'Posted' })
+      .getMany();
+  }
+  
   async findById(id: number): Promise<League> {
     const league = await this.leagueRepository.findOne({ where: { id: id } });
     if (!league) {

@@ -18,6 +18,15 @@ export class LeaguesController {
     return this.leagueService.findAll();
   }
 
+  @Get('/league-teams')
+  async getAllLeaguesWithTeams() {
+    const leagues = await this.leagueService.findAllLeaguesWithTeams();
+    if (leagues.length === 0) {
+      return { message: 'No league posted.' };
+    }
+    return leagues;
+  }
+
   @Get(':id')
   async findById(@Param('id') id: string): Promise<League> {
     return this.leagueService.findById(parseInt(id, 10));

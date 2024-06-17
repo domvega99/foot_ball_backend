@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { LeagueTeam } from 'src/football/league_teams/entities/league_team.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class League {
@@ -20,9 +21,12 @@ export class League {
     @Column({ nullable: true })
     modified_by: number;
 
-    @Column()
+    @Column({ default: 1 })
     stat: number;
 
     @Column({ nullable: true })
     status: string;
+
+    @OneToMany(() => LeagueTeam, leagueTeam => leagueTeam.league)
+    teams: LeagueTeam[];
 }

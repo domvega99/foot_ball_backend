@@ -1,3 +1,4 @@
+import { League } from 'src/football/leagues/entities/league.entity';
 import { Team } from 'src/football/teams/entities/team.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 
@@ -46,4 +47,8 @@ export class LeagueTeam {
 
     @Column({ nullable: true })
     status: number;
+
+    @ManyToOne(() => League, league => league.teams)
+    @JoinColumn({ name: 'league_id' })
+    league: League;
 }
