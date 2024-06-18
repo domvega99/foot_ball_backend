@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateScoreDto } from './dto/create-score.dto';
 import { UpdateScoreDto } from './dto/update-score.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,6 +13,16 @@ export class ScoresService {
   ) {}
 
   async create(data: Partial<Score>): Promise<Score> {
+    const existingScore = await this.scoreRepository.findOne({
+      where: {
+        match_id: data.match_id,
+        team_id: data.team_id,
+      },
+    });
+
+    if (existingScore) {
+      throw new BadRequestException('Team already exist in this match.');
+    }
     const result = this.scoreRepository.create(data);
     return this.scoreRepository.save(result);
   }

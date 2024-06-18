@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Score } from 'src/football/scores/entities/score.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class Match {
@@ -31,4 +32,7 @@ export class Match {
 
     @Column({ nullable: true })
     status: string;
+
+    @OneToMany(() => Score, score => score.match)
+    scores: Score[];
 }
