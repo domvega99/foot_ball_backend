@@ -20,7 +20,11 @@ export class MatchesService {
   }
 
   async findAll(): Promise<Match[]> {
-    return this.matchRepository.find({ where: { stat: 1 }, relations: ['scores'] });
+    return this.matchRepository.find({ 
+      where: { stat: 1 }, 
+      relations: ['scores', 'scores.team'],
+      order: { match_date: 'DESC', match_time: 'ASC' }
+    });
   }
 
   async findById(id: number): Promise<Match> {

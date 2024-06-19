@@ -12,7 +12,10 @@ export class Match {
     @Column()
     match_date: Date;
 
-    @Column()
+    @Column({ type: 'time' }) 
+    match_time: string;
+
+    @Column({ type: 'varchar', length: 255 })
     location: string;
 
     @Column({ type: 'timestamp' })
@@ -30,7 +33,7 @@ export class Match {
     @Column({ default: 1 })
     stat: number;
 
-    @Column({ nullable: true })
+    @Column({ type: 'varchar', length: 45, nullable: true })
     status: string;
 
     @OneToMany(() => Score, score => score.match)

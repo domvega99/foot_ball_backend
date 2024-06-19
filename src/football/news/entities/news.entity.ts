@@ -5,12 +5,10 @@ export class News {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ type: 'varchar', length: 255 })
     title: string;
 
-    @Column({
-        type: 'text',  
-    })
+    @Column({ type: 'text' })
     content: string;
 
     @Column({ type: 'timestamp' })
@@ -28,6 +26,6 @@ export class News {
     @Column()
     stat: number;
 
-    @Column({ nullable: true })
+    @Column({ type: 'varchar', length: 45, nullable: true })
     status: string;
 }

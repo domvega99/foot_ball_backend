@@ -21,7 +21,7 @@ export class ScoresService {
     });
 
     if (existingScore) {
-      throw new BadRequestException('Team already exist in this match.');
+      throw new BadRequestException('This team already exist in this match.');
     }
     const result = this.scoreRepository.create(data);
     return this.scoreRepository.save(result);

@@ -45,8 +45,8 @@ export class LeagueTeam {
     @Column({ default: 1 })
     stat: number;
 
-    @Column({ nullable: true })
-    status: number;
+    @Column({ type: 'varchar', length: 45, nullable: true })
+    status: string;
 
     @ManyToOne(() => League, league => league.teams)
     @JoinColumn({ name: 'league_id' })
