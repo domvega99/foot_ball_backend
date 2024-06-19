@@ -14,12 +14,13 @@ export class MatchesService {
   ) {}
 
   async create(data: Partial<Match>): Promise<Match> {
+    data.status = 'Draft';
     const result = this.matchRepository.create(data);
     return this.matchRepository.save(result);
   }
 
   async findAll(): Promise<Match[]> {
-    return this.matchRepository.find({ relations: ['scores'] });
+    return this.matchRepository.find({ where: { stat: 1 }, relations: ['scores'] });
   }
 
   async findById(id: number): Promise<Match> {

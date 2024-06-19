@@ -27,7 +27,7 @@ export class Match {
     @Column({ nullable: true })
     modified_by: number;
 
-    @Column()
+    @Column({ default: 1 })
     stat: number;
 
     @Column({ nullable: true })
