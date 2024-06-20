@@ -41,6 +41,20 @@ export class ScoresService {
 
   async update(id: number, data: Partial<Score>): Promise<Score> {
     const result = await this.findById(id);
+
+    if (data.match_id && data.team_id) {
+      const existingScore = await this.scoreRepository.findOne({
+        where: {
+          match_id: data.match_id,
+          team_id: data.team_id,
+        },
+      });
+
+      if (existingScore && existingScore.id !== id) {
+        throw new BadRequestException('This team already exists in this match.');
+      }
+    }
+
     return this.scoreRepository.save({ ...result, ...data });
   }
 
