@@ -18,13 +18,19 @@ export class LeaguesController {
     return this.leagueService.findAll();
   }
 
-  @Get('/league-teams')
+  @Get('/website/leagues')
+  async getAllPostedLeagues() {
+    return await this.leagueService.findAllPostedLeague();
+  }
+
+  @Get('/website/league-teams')
   async getAllLeaguesWithTeams() {
-    const leagues = await this.leagueService.findAllLeaguesWithTeams();
-    if (leagues.length === 0) {
-      return { message: 'No league posted.' };
-    }
-    return leagues;
+    return await this.leagueService.findAllLeaguesWithTeams();
+  }
+
+  @Get('website/league-match')
+  async getPostedLeaguesWithPostedMatches(): Promise<League[]> {
+    return this.leagueService.getPostedLeaguesWithPostedMatches();
   }
 
   @Get(':id')

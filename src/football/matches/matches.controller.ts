@@ -13,10 +13,14 @@ export class MatchesController {
     return this.matchesService.create(data);
   }
 
-  @Get()
-  async findAll(): Promise<Match[]> {
-    return this.matchesService.findAll();
+  @Get(':leagueId')
+  async findAll(@Param('leagueId') leagueId: number): Promise<Match[]> {
+    return this.matchesService.findAll(leagueId);
   }
+  // @Get()
+  // async findAll(): Promise<Match[]> {
+  //   return this.matchesService.findAll();
+  // }
 
   @Get(':id')
   async findById(@Param('id') id: string): Promise<Match> {

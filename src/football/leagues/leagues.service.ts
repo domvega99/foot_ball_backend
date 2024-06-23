@@ -4,6 +4,7 @@ import { UpdateLeagueDto } from './dto/update-league.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { League } from './entities/league.entity';
 import { Repository } from 'typeorm';
+import { Match } from '../matches/entities/match.entity';
 
 @Injectable()
 export class LeaguesService {
@@ -21,8 +22,13 @@ export class LeaguesService {
     return this.leagueRepository.find();
   }
 
-  async findAllLeaguesWithTeams(): Promise<League[]> {
-    return this.leagueRepository
+  async findAllPostedLeague(): Promise<League[]> {
+    return this.leagueRepository.find({ where: { status: 'Posted' } });
+  }
+
+
+  async findAllLeaguesWithTeams(): Promise<League[]> { // display table in admin
+    return await this.leagueRepository
       .createQueryBuilder('league')
       .leftJoinAndSelect('league.teams', 'leagueTeam')
       .leftJoinAndSelect('leagueTeam.team', 'team')
@@ -30,6 +36,40 @@ export class LeaguesService {
       .andWhere('leagueTeam.stat = :teamStat', { teamStat: 1 })
       .andWhere('league.status = :leagueStatus', { leagueStatus: 'Posted' })
       .getMany();
+  }
+
+  async getPostedLeaguesWithPostedMatches(): Promise<League[]> {
+    const leagues = await this.leagueRepository
+      .createQueryBuilder('league')
+      .leftJoinAndSelect('league.matches', 'match', 'match.status = :matchStatus', {
+        matchStatus: 'Posted',
+      })
+      .leftJoinAndSelect('match.scores', 'score')
+      .leftJoinAndSelect('score.team', 'team')
+      .where('league.status = :leagueStatus', { leagueStatus: 'Posted' })
+      .orderBy('match.match_date', 'ASC') 
+      .getMany();
+
+    leagues.forEach((league: any) => {
+      const groupedMatches = new Map<string, Match[]>(); 
+
+      league.matches.forEach((match) => {
+        const matchDate = new Date(match.match_date); 
+        const formattedDate = matchDate.toISOString().split('T')[0]; 
+
+        if (!groupedMatches.has(formattedDate)) {
+          groupedMatches.set(formattedDate, []);
+        }
+        groupedMatches.get(formattedDate).push(match);
+      });
+
+      league.matches = Array.from(groupedMatches, ([matchDate, matches]) => ({
+        match_date: matches[0].match_date, 
+        matches: matches,
+      }));
+    });
+
+    return leagues;
   }
   
   async findById(id: number): Promise<League> {

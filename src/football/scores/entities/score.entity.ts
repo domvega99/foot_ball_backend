@@ -16,6 +16,9 @@ export class Score {
     @Column({ default: 0 })
     points: number;
 
+    @Column({ nullable: true })
+    result: string;
+
     @ManyToOne(() => Match, match => match.scores)
     @JoinColumn({ name: 'match_id' }) 
     match: Match;

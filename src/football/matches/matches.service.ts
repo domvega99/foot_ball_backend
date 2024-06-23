@@ -19,9 +19,9 @@ export class MatchesService {
     return this.matchRepository.save(result);
   }
 
-  async findAll(): Promise<Match[]> {
+  async findAll(leagueId: number): Promise<Match[]> {
     return this.matchRepository.find({ 
-      where: { stat: 1 }, 
+      where: { stat: 1, league_id: leagueId }, 
       relations: ['scores', 'scores.team'],
       order: { match_date: 'DESC', match_time: 'ASC' }
     });

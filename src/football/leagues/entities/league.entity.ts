@@ -1,4 +1,5 @@
 import { LeagueTeam } from 'src/football/league_teams/entities/league_team.entity';
+import { Match } from 'src/football/matches/entities/match.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
@@ -29,4 +30,7 @@ export class League {
 
     @OneToMany(() => LeagueTeam, leagueTeam => leagueTeam.league)
     teams: LeagueTeam[];
+
+    @OneToMany(() => Match, match => match.league)
+    matches: Match[];
 }
