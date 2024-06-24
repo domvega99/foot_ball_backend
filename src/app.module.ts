@@ -21,6 +21,7 @@ import { LeagueTeamsModule } from './football/league_teams/league_teams.module';
 import { MatchesModule } from './football/matches/matches.module';
 import { ScoresModule } from './football/scores/scores.module';
 import { NewsModule } from './football/news/news.module';
+import { ContentModule } from './football/content/content.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { NewsModule } from './football/news/news.module';
     MatchesModule,
     ScoresModule,
     NewsModule,
+    ContentModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthMiddleware], // Provide AuthMiddleware here if necessary
