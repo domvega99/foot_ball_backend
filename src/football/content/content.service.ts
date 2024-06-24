@@ -21,7 +21,19 @@ export class ContentService {
     return this.contentRepository.find();
   }
 
-  async findAllDraftContent(): Promise<any> {
+  async findAllPublishedNews(): Promise<Content[]> {
+    return this.contentRepository.find({ where: { status: 'Published', stat: 1, block: 'News' } });
+  }
+
+  async findAllPublishedFeatures(): Promise<Content[]> {
+    return this.contentRepository.find({ where: { status: 'Published', stat: 1, block: 'Feature' } });
+  }
+
+  async findAllPublishedClubs(): Promise<Content[]> {
+    return this.contentRepository.find({ where: { status: 'Published', stat: 1, block: 'Club' } });
+  }
+
+  async findAllPublishedContent(): Promise<any> {
     const contents = await this.contentRepository.createQueryBuilder('content')
       .where('content.status = :status', { status: 'Published' })
       .andWhere('content.stat = :stat', { stat: 1 })

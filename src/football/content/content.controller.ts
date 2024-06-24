@@ -29,9 +29,24 @@ export class ContentController {
     return { imagePath: file.path };
   }
 
-  @Get('/website/content')
-  async findAllDraftContent(): Promise<Content[]> {
-    return this.contentService.findAllDraftContent();
+  @Get('/website/news')
+  async findAllPublishedNews(): Promise<Content[]> {
+    return this.contentService.findAllPublishedNews();
+  }
+
+  @Get('/website/features')
+  async findAllPublishedFeatures(): Promise<Content[]> {
+    return this.contentService.findAllPublishedFeatures();
+  }
+
+  @Get('/website/clubs')
+  async findAllPublishedClubs(): Promise<Content[]> {
+    return this.contentService.findAllPublishedClubs();
+  }
+
+  @Get('/website/contents')
+  async findAllPublishedContent(): Promise<Content[]> {
+    return this.contentService.findAllPublishedContent();
   }
 
   @Get()
