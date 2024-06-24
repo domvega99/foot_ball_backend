@@ -21,6 +21,24 @@ export class ContentService {
     return this.contentRepository.find();
   }
 
+  async findAllDraftContent(): Promise<any> {
+    const contents = await this.contentRepository.createQueryBuilder('content')
+      .where('content.status = :status', { status: 'Published' })
+      .andWhere('content.stat = :stat', { stat: 1 })
+      .orderBy('content.created_on', 'DESC')
+      .getMany();
+
+    const groupedContents = contents.reduce((acc, content) => {
+      if (!acc[content.block]) {
+        acc[content.block] = [];
+      }
+      acc[content.block].push(content);
+      return acc;
+    }, {});
+
+    return groupedContents;
+  }
+
   async findById(id: number): Promise<Content> {
     const result = await this.contentRepository.findOne({ where: { id: id } });
     if (!result) {

@@ -29,6 +29,11 @@ export class ContentController {
     return { imagePath: file.path };
   }
 
+  @Get('/website/content')
+  async findAllDraftContent(): Promise<Content[]> {
+    return this.contentService.findAllDraftContent();
+  }
+
   @Get()
   async findAll(): Promise<Content[]> {
     return this.contentService.findAll();
