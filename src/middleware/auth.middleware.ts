@@ -30,11 +30,8 @@ export class AuthMiddleware implements NestMiddleware {
                 throw new UnauthorizedException('User not found');
             }
 
-            if (user.role === 'User') {
-                throw new ForbiddenException('You do not have permission');
-            }
+            req.user = user; // Attach the user object to the request
 
-            req.user = user; 
             next(); 
         } catch (err) {
             console.error('Error:', err.message); 

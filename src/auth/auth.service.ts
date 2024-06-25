@@ -32,16 +32,17 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    const accessToken = this.generateJwtToken(user.id, user.email, user.given_name, user.key);
+    const accessToken = this.generateJwtToken(user.id, user.email, user.given_name, user.key, user.role);
     return { accessToken };
   }
   
-  private generateJwtToken(sid: number, email: string, given_name: string, key: string): string {
+  private generateJwtToken(sid: number, email: string, given_name: string, key: string, role: string): string {
     const payload = {
       sid,
       email,
       given_name,
-      iss: key 
+      iss: key,
+      role: role
     };
     return this.jwtService.sign(payload);
   }

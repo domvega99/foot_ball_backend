@@ -18,11 +18,6 @@ export class LeagueTeamsController {
     return this.leagueTeamService.findAll(leagueId);
   }
 
-  @Get(':id')
-  async findById(@Param('id') id: string): Promise<LeagueTeam> {
-    return this.leagueTeamService.findById(parseInt(id, 10));
-  }
-
   @Patch(':id')
   async update(
     @Param('id') id: string,

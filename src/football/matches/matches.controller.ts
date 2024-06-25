@@ -22,10 +22,10 @@ export class MatchesController {
   //   return this.matchesService.findAll();
   // }
 
-  @Get(':id')
-  async findById(@Param('id') id: string): Promise<Match> {
-    return this.matchesService.findById(parseInt(id, 10));
-  }
+  // @Get(':id')
+  // async findById(@Param('id') id: string): Promise<Match> {
+  //   return this.matchesService.findById(parseInt(id, 10));
+  // }
 
   @Patch(':id')
   async update(
