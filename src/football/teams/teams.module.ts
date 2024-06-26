@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { TeamsController } from './teams.controller';
 import { Team } from './entities/team.entity';
@@ -23,10 +23,16 @@ export class TeamsModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
+      .exclude(
+        { path: 'football/teams', method: RequestMethod.GET },
+      )
       .forRoutes(TeamsController);
 
     consumer
       .apply(AuthMiddleware, AdminRoleMiddleware)
+      .exclude(
+        { path: 'football/teams', method: RequestMethod.GET },
+      )
       .forRoutes(TeamsController);
   }
 }

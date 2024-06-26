@@ -124,8 +124,26 @@ export class UsersService {
   }
 
   async update(id: number, userData: Partial<User>): Promise<User> {
-    const team = await this.findById(id);
-    return this.userRepository.save({ ...team, ...userData });
+    const user = await this.findById(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (userData.password) {
+      const hashedPassword = await bcrypt.hash(userData.password, 10);
+      userData.password = hashedPassword;
+    }
+
+    if (userData.email !== undefined) {
+      const existingUser = await this.userRepository.findOne({ where: { email: userData.email } });
+      if (existingUser && existingUser.id !== id) {
+        throw new Error('Email already in use');
+      }
+      user.email = userData.email;
+    }
+
+    const updatedUser = await this.userRepository.save({ ...user, ...userData });
+    return updatedUser;
   }
 
   async remove(id: number): Promise<void> {

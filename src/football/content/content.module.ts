@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ContentService } from './content.service';
 import { ContentController } from './content.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -23,10 +23,24 @@ export class ContentModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
+      .exclude(
+        { path: 'football/content/website/news', method: RequestMethod.GET },
+        { path: 'football/content/website/features', method: RequestMethod.GET },
+        { path: 'football/content/website/clubs', method: RequestMethod.GET },
+        { path: 'football/content/website/contents', method: RequestMethod.GET },
+        { path: 'football/content', method: RequestMethod.GET },
+      )
       .forRoutes(ContentController);
 
     consumer
       .apply(AuthMiddleware, ContentRoleMiddleware)
+      .exclude(
+        { path: 'football/content/website/news', method: RequestMethod.GET },
+        { path: 'football/content/website/features', method: RequestMethod.GET },
+        { path: 'football/content/website/clubs', method: RequestMethod.GET },
+        { path: 'football/content/website/contents', method: RequestMethod.GET },
+        { path: 'football/content', method: RequestMethod.GET },
+      )
       .forRoutes(ContentController);
   }
 }

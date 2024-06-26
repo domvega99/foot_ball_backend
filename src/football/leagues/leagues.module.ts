@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { LeaguesService } from './leagues.service';
 import { LeaguesController } from './leagues.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -23,10 +23,20 @@ export class LeaguesModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
+      .exclude(
+        { path: 'football/leagues/website/leagues', method: RequestMethod.GET },
+        { path: 'football/leagues/website/league-teams', method: RequestMethod.GET },
+        { path: 'football/leagues/website/league-match', method: RequestMethod.GET },
+      )
       .forRoutes(LeaguesController);
 
     consumer
       .apply(AuthMiddleware, AdminRoleMiddleware)
+      .exclude(
+        { path: 'football/leagues/website/leagues', method: RequestMethod.GET },
+        { path: 'football/leagues/website/league-teams', method: RequestMethod.GET },
+        { path: 'football/leagues/website/league-match', method: RequestMethod.GET },
+      )
       .forRoutes(LeaguesController);
   }
 }

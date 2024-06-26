@@ -15,10 +15,14 @@ export class AuthController {
 
   @Get('logout')
   async logout(@Req() req, @Res() res: any) {
-    res.clearCookie('key');
-    req.session = null;
-    res.status(200).json({ message: 'Logout successful' });
-    console.log('Logout successful')
+    res.clearCookie('key', { path: '/' }); // Make sure to specify the path if needed
+    req.session.destroy((err: any) => {
+      if (err) {
+        return res.status(500).json({ message: 'Logout failed', error: err });
+      }
+      res.status(200).json({ message: 'Logout successful' });
+      console.log('Logout successful');
+    });
   }
 
   @Post('login')
