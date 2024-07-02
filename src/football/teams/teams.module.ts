@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthMiddleware } from 'src/middleware/auth.middleware';
 import { AdminRoleMiddleware } from 'src/middleware/admin.role.middleware';
 import { User } from 'src/users/entities/user.entity';
+import { TeamRoleMiddleware } from 'src/middleware/team.role.middleware';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ export class TeamsModule {
       .forRoutes(TeamsController);
 
     consumer
-      .apply(AuthMiddleware, AdminRoleMiddleware)
+      .apply(AuthMiddleware, TeamRoleMiddleware)
       .exclude(
         { path: 'football/teams', method: RequestMethod.GET },
       )
