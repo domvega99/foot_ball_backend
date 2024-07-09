@@ -26,6 +26,7 @@ export class TeamsModule {
       .apply(AuthMiddleware)
       .exclude(
         { path: 'football/teams', method: RequestMethod.GET },
+        { path: 'football/teams/:id', method: RequestMethod.GET },
       )
       .forRoutes(TeamsController);
 
@@ -33,6 +34,7 @@ export class TeamsModule {
       .apply(AuthMiddleware, TeamRoleMiddleware)
       .exclude(
         { path: 'football/teams', method: RequestMethod.GET },
+        { path: 'football/teams/:id', method: RequestMethod.GET },
       )
       .forRoutes(TeamsController);
   }

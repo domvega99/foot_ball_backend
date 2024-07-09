@@ -6,7 +6,7 @@ export class TeamRoleMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: NextFunction) {
         const user = req.user;
 
-        if (user.role !== 'Team' && user.role !== 'Super Admin' && user.role !== 'Admin') {
+        if (user.role !== 'Team' && user.role !== 'Super Admin' && user.role !== 'Admin' && user.role !== 'Content Editor') {
             throw new ForbiddenException('You do not have permission to access this resource');
         }
 
