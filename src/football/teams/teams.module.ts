@@ -8,10 +8,11 @@ import { AuthMiddleware } from 'src/middleware/auth.middleware';
 import { AdminRoleMiddleware } from 'src/middleware/admin.role.middleware';
 import { User } from 'src/users/entities/user.entity';
 import { TeamRoleMiddleware } from 'src/middleware/team.role.middleware';
+import { Squad } from '../squads/entities/squad.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Team, User]),
+    TypeOrmModule.forFeature([Team, User, Squad]),
     JwtModule.register({
       secret: 'your-secret-key',
       signOptions: { expiresIn: '1h' },
@@ -27,6 +28,7 @@ export class TeamsModule {
       .exclude(
         { path: 'football/teams', method: RequestMethod.GET },
         { path: 'football/teams/:id', method: RequestMethod.GET },
+        { path: 'football/teams/:id/squad', method: RequestMethod.GET },
       )
       .forRoutes(TeamsController);
 
@@ -35,6 +37,7 @@ export class TeamsModule {
       .exclude(
         { path: 'football/teams', method: RequestMethod.GET },
         { path: 'football/teams/:id', method: RequestMethod.GET },
+        { path: 'football/teams/:id/squad', method: RequestMethod.GET },
       )
       .forRoutes(TeamsController);
   }

@@ -21,6 +21,7 @@ import { ScoresModule } from './football/scores/scores.module';
 import { ContentModule } from './football/content/content.module';
 import { ContentController } from './football/content/content.controller';
 import { ContentRoleMiddleware } from './middleware/content.role.middleware';
+import { SquadsModule } from './football/squads/squads.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { ContentRoleMiddleware } from './middleware/content.role.middleware';
     MatchesModule,
     ScoresModule,
     ContentModule,
+    SquadsModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthMiddleware], // Provide AuthMiddleware here if necessary

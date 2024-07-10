@@ -35,4 +35,9 @@ export class TeamsController {
   async remove(@Param('id') id: string): Promise<void> {
     await this.teamsService.remove(+id);
   }
+
+  @Get(':id/squad')
+  async findAllActiveTeamSquad(@Param('id') id: number) {
+    return this.teamsService.findAllActiveTeamSquad(id);
+  }
 }

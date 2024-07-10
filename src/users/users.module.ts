@@ -12,7 +12,7 @@ import { AdminRoleMiddleware } from 'src/middleware/admin.role.middleware';
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
       secret: 'your-secret-key', 
-      signOptions: { expiresIn: '1h' }, 
+      signOptions: { expiresIn: '20' }, 
     }),],
   controllers: [UsersController],
   providers: [UsersService],
