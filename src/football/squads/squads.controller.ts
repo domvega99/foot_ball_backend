@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { SquadsService } from './squads.service';
 import { CreateSquadDto } from './dto/create-squad.dto';
 import { UpdateSquadDto } from './dto/update-squad.dto';
 import { Squad } from './entities/squad.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Controller('football/squads')
 export class SquadsController {
@@ -34,5 +36,19 @@ export class SquadsController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     await this.squadsService.remove(+id);
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('image', {
+    storage: diskStorage({
+      destination: './uploads/squad',
+      filename: (req, file, callback) => {
+        const originalName = file.originalname;
+        return callback(null, originalName);
+      },
+    }),
+  }))
+  async uploadImage(@UploadedFile() file) {
+    return { imagePath: file.path };
   }
 }
