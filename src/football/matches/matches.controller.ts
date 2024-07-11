@@ -3,6 +3,7 @@ import { MatchesService } from './matches.service';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { Match } from './entities/match.entity';
+import { Score } from '../scores/entities/score.entity';
 
 @Controller('football/matches')
 export class MatchesController {
@@ -17,10 +18,11 @@ export class MatchesController {
   async findAll(@Param('leagueId') leagueId: number): Promise<Match[]> {
     return this.matchesService.findAll(leagueId);
   }
-  // @Get()
-  // async findAll(): Promise<Match[]> {
-  //   return this.matchesService.findAll();
-  // }
+
+  @Get()
+  async findAllMatches(): Promise<Match[]> {
+    return this.matchesService.findAllMatches();
+  }
 
   // @Get(':id')
   // async findById(@Param('id') id: string): Promise<Match> {
@@ -38,5 +40,13 @@ export class MatchesController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     await this.matchesService.remove(+id);
+  }
+
+  @Get('league/:leagueId/team/:teamId/scores')
+  async getScoresByLeagueAndTeam(
+    @Param('leagueId') leagueId: number,
+    @Param('teamId') teamId: number,
+  ): Promise<{ match_id: number, match: Match | null }[]> {
+    return this.matchesService.getScoresByLeagueAndTeam(leagueId, teamId);
   }
 }

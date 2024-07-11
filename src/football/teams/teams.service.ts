@@ -51,5 +51,14 @@ export class TeamsService {
     (team as any).squad = squad;
 
     return team;
-}
+  }
+
+  async findAllTeamFixtures(id: number): Promise<Team> {
+    const team = await this.teamRepository.findOne({ where: { id } });
+    if (!team) {
+        throw new NotFoundException('Team not found');
+    }
+
+    return team;
+  }
 }

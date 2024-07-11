@@ -16,7 +16,7 @@ import { AuthMiddleware } from 'src/middleware/auth.middleware';
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
       secret: 'your-secret-key', 
-      signOptions: { expiresIn: '1h' }, 
+      signOptions: { expiresIn: '48h' }, 
     }),
     PassportModule.register({ defaultStrategy: 'facebook' }),
     ConfigModule.forRoot(),
