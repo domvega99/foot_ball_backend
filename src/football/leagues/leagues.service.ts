@@ -14,12 +14,21 @@ export class LeaguesService {
   ) {}
 
   async create(leagueData: Partial<League>): Promise<League> {
-    const league = this.leagueRepository.create(leagueData);
+    const leagueDataWithTimestamps = {
+        ...leagueData,
+        created_on: new Date(), 
+    };
+    const league = this.leagueRepository.create(leagueDataWithTimestamps);
     return this.leagueRepository.save(league);
   }
 
+
   async findAll(): Promise<League[]> {
-    return this.leagueRepository.find();
+    return this.leagueRepository.find({
+      order: {
+        created_on: 'DESC',
+      },
+    });
   }
 
   async findAllPostedLeague(): Promise<League[]> {
@@ -82,8 +91,14 @@ export class LeaguesService {
 
   async update(id: number, leagueData: Partial<League>): Promise<League> {
     const league = await this.findById(id);
-    return this.leagueRepository.save({ ...league, ...leagueData });
-  }
+    const updatedLeagueData = {
+        ...league,
+        ...leagueData,
+        modified_on: new Date(),  
+    };
+    return this.leagueRepository.save(updatedLeagueData);
+}
+
 
   async remove(id: number): Promise<void> {
     const league = await this.findById(id);

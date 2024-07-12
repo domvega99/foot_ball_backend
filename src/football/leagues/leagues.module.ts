@@ -24,6 +24,7 @@ export class LeaguesModule {
     consumer
       .apply(AuthMiddleware)
       .exclude(
+        { path: 'football/leagues', method: RequestMethod.GET },
         { path: 'football/leagues/website/leagues', method: RequestMethod.GET },
         { path: 'football/leagues/website/league-teams', method: RequestMethod.GET },
         { path: 'football/leagues/website/league-match', method: RequestMethod.GET },
@@ -33,6 +34,7 @@ export class LeaguesModule {
     consumer
       .apply(AuthMiddleware, AdminRoleMiddleware)
       .exclude(
+        { path: 'football/leagues', method: RequestMethod.GET },
         { path: 'football/leagues/website/leagues', method: RequestMethod.GET },
         { path: 'football/leagues/website/league-teams', method: RequestMethod.GET },
         { path: 'football/leagues/website/league-match', method: RequestMethod.GET },

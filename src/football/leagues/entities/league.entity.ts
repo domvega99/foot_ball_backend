@@ -10,7 +10,7 @@ export class League {
     @Column({ type: 'varchar', length: 255 })
     title: string;
 
-    @Column({ type: 'timestamp' })
+    @Column({ nullable: true })
     created_on: Date;
 
     @Column({ nullable: true })
@@ -33,4 +33,5 @@ export class League {
 
     @OneToMany(() => Match, match => match.league)
     matches: Match[];
+    
 }
