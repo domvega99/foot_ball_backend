@@ -23,6 +23,7 @@ import { ContentController } from './football/content/content.controller';
 import { ContentRoleMiddleware } from './middleware/content.role.middleware';
 import { SquadsModule } from './football/squads/squads.module';
 import { TeamAboutModule } from './football/team_about/team_about.module';
+import { GalleryModule } from './football/gallery/gallery.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { TeamAboutModule } from './football/team_about/team_about.module';
     ContentModule,
     SquadsModule,
     TeamAboutModule,
+    GalleryModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthMiddleware], // Provide AuthMiddleware here if necessary
