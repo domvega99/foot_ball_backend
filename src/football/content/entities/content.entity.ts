@@ -20,6 +20,9 @@ export class Content {
     @Column({ type: 'text', nullable: true })
     content: string;
 
+    @Column({ nullable: true })
+    team_id: number;
+
     @Column({ type: 'timestamp' })
     created_on: Date;
 

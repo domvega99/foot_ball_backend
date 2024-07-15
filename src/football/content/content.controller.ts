@@ -44,6 +44,11 @@ export class ContentController {
     return this.contentService.findAllPublishedClubs();
   }
 
+  @Get('/website/clubs/:teamId')
+  async getContentByTeamId(@Param('teamId') teamId: string): Promise<Content[]> {
+    return this.contentService.getContentByTeamId(parseInt(teamId, 10));
+  }
+
   @Get('/website/contents')
   async findAllPublishedContent(): Promise<Content[]> {
     return this.contentService.findAllPublishedContent();

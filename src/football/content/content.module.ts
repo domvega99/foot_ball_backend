@@ -27,6 +27,7 @@ export class ContentModule {
         { path: 'football/content/website/news', method: RequestMethod.GET },
         { path: 'football/content/website/features', method: RequestMethod.GET },
         { path: 'football/content/website/clubs', method: RequestMethod.GET },
+        { path: 'football/content/website/clubs/:teamId', method: RequestMethod.GET },
         { path: 'football/content/website/contents', method: RequestMethod.GET },
         { path: 'football/content/:id', method: RequestMethod.GET },
       )
@@ -38,6 +39,7 @@ export class ContentModule {
         { path: 'football/content/website/news', method: RequestMethod.GET },
         { path: 'football/content/website/features', method: RequestMethod.GET },
         { path: 'football/content/website/clubs', method: RequestMethod.GET },
+        { path: 'football/content/website/clubs/:teamId', method: RequestMethod.GET },
         { path: 'football/content/website/contents', method: RequestMethod.GET },
         { path: 'football/content/:id', method: RequestMethod.GET },
       )

@@ -68,4 +68,13 @@ export class ContentService {
     const result = await this.findById(id);
     await this.contentRepository.remove(result);
   }
+
+  async getContentByTeamId(teamId: number): Promise<Content[]> {
+    const result = await this.contentRepository.find({
+      where: { team_id: teamId },
+      order: { created_on: 'DESC' },
+    });
+    return result;
+  }
+
 }
