@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Team } from 'src/football/teams/entities/team.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
 export class Content {
@@ -40,4 +41,8 @@ export class Content {
 
     @Column({ type: 'varchar', length: 45, nullable: true })
     status: string;
+
+    @ManyToOne(() => Team, team => team.contents)
+    @JoinColumn({ name: 'team_id' })
+    team: Team;
 }

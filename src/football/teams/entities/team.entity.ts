@@ -1,3 +1,4 @@
+import { Content } from 'src/football/content/entities/content.entity';
 import { LeagueTeam } from 'src/football/league_teams/entities/league_team.entity';
 import { Score } from 'src/football/scores/entities/score.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
@@ -25,4 +26,7 @@ export class Team {
 
     @OneToMany(() => Score, score => score.team)
     scores: Score[];
+
+    @OneToMany(() => Content, content => content.team)
+    contents: Content[];
 }

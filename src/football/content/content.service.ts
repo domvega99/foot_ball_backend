@@ -18,7 +18,7 @@ export class ContentService {
   }
 
   async findAll(): Promise<Content[]> {
-    return this.contentRepository.find();
+    return this.contentRepository.find({ relations: ['team'] });
   }
 
   async findAllPublishedNews(): Promise<Content[]> {
