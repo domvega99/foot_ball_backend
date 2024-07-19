@@ -24,6 +24,9 @@ export class Team {
     @Column({ type: 'text' })
     file_name: string;
 
+    @Column({ nullable: true })
+    slug: string;
+
     @OneToMany(() => Score, score => score.team)
     scores: Score[];
 
