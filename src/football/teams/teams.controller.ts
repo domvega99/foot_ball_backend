@@ -40,4 +40,9 @@ export class TeamsController {
   async findAllActiveTeamSquad(@Param('id') id: number) {
     return this.teamsService.findAllActiveTeamSquad(id);
   }
+
+  @Get('slug/:params')
+  async findTeambySlug(@Param('params') slug: string) {
+    return this.teamsService.findTeambySlug(slug);
+  }
 }

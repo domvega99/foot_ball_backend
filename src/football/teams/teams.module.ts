@@ -29,6 +29,7 @@ export class TeamsModule {
         { path: 'football/teams', method: RequestMethod.GET },
         { path: 'football/teams/:id', method: RequestMethod.GET },
         { path: 'football/teams/:id/squad', method: RequestMethod.GET },
+        { path: 'football/teams/slug/:params', method: RequestMethod.GET },
       )
       .forRoutes(TeamsController);
 
@@ -38,6 +39,7 @@ export class TeamsModule {
         { path: 'football/teams', method: RequestMethod.GET },
         { path: 'football/teams/:id', method: RequestMethod.GET },
         { path: 'football/teams/:id/squad', method: RequestMethod.GET },
+        { path: 'football/teams/slug/:params', method: RequestMethod.GET },
       )
       .forRoutes(TeamsController);
   }
