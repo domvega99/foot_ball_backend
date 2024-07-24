@@ -7,10 +7,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthMiddleware } from 'src/middleware/auth.middleware';
 import { AdminRoleMiddleware } from 'src/middleware/admin.role.middleware';
 import { User } from 'src/users/entities/user.entity';
+import { LeagueTeam } from '../league_teams/entities/league_team.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Score, User]),
+    TypeOrmModule.forFeature([Score, User, LeagueTeam]),
     JwtModule.register({
       secret: 'your-secret-key',
       signOptions: { expiresIn: '1h' },
