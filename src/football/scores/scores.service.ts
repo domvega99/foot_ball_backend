@@ -15,7 +15,15 @@ export class ScoresService {
     private readonly leagueTeamRepository: Repository<LeagueTeam>,
   ) {}
 
-  async create(data: Partial<Score>): Promise<Score> {
+  async create(data: Partial<Score>, leagueId: number): Promise<Score> {
+
+    const existingLeagueTeam = await this.leagueTeamRepository.findOne({ 
+        where: { team_id: data.team_id, league_id: leagueId } 
+    });
+    if (!existingLeagueTeam) {
+      throw new BadRequestException('This team was not added in the league standings.');
+    }
+
     const existingScore = await this.scoreRepository.findOne({
       where: {
         match_id: data.match_id,
@@ -51,7 +59,6 @@ export class ScoresService {
                 team_id: data.team_id,
             },
         });
-
         if (existingScore && existingScore.id !== id) {
             throw new BadRequestException('This team already exists in this match.');
         }
@@ -62,16 +69,15 @@ export class ScoresService {
         const leagueTeam = await this.leagueTeamRepository.findOne({ 
             where: { team_id: updatedScore.team_id, league_id: leagueId } 
         });
-
         if (leagueTeam) {
             this.adjustLeagueTeamStats(leagueTeam, result.result, -1);
             this.adjustLeagueTeamStats(leagueTeam, data.result, 1);
 
             if (!result.result) {
-              leagueTeam.played += 1;
+                leagueTeam.played += 1;
             }
             await this.leagueTeamRepository.save(leagueTeam);
-        }
+        } 
     }
     return updatedScore;
   }
@@ -80,12 +86,15 @@ export class ScoresService {
       switch (result) {
           case 'Win':
               leagueTeam.won += change;
+              leagueTeam.points += change * 3;
               break;
           case 'Loss':
               leagueTeam.lost += change;
+              // No change in points for loss
               break;
           case 'Draw':
               leagueTeam.drawn += change;
+              leagueTeam.points += change * 1;
               break;
       }
   }

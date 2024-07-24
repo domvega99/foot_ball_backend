@@ -8,9 +8,9 @@ import { Score } from './entities/score.entity';
 export class ScoresController {
   constructor(private readonly scoresService: ScoresService) {}
   
-  @Post()
-  async create(@Body() data: Partial<Score>): Promise<Score> {
-    return this.scoresService.create(data);
+  @Post('league/:leagueId')
+  async create(@Body() data: Partial<Score>, @Param('leagueId') leagueId: string,): Promise<Score> {
+    return this.scoresService.create(data, parseInt(leagueId, 10));
   }
 
   @Get()
