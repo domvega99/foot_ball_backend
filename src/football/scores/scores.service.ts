@@ -3,7 +3,7 @@ import { CreateScoreDto } from './dto/create-score.dto';
 import { UpdateScoreDto } from './dto/update-score.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Score } from './entities/score.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { LeagueTeam } from '../league_teams/entities/league_team.entity';
 
 @Injectable()
@@ -66,9 +66,10 @@ export class ScoresService {
 
     const updatedScore = await this.scoreRepository.save({ ...result, ...data });
 
-    const leagueTeam = await this.leagueTeamRepository.findOne({ 
-        where: { team_id: updatedScore.team_id, league_id: leagueId } 
+    const leagueTeam = await this.leagueTeamRepository.findOne({
+        where: { team_id: updatedScore.team_id, league_id: leagueId }
     });
+
     if (leagueTeam) {
         const totalPoints = await this.calculateTotalPoints(updatedScore.team_id);
         leagueTeam.goals_for = totalPoints;
@@ -81,7 +82,65 @@ export class ScoresService {
                 leagueTeam.played += 1;
             }
         }
+
+        // Calculate goals against
+        const totalGoalsAgainst = await this.calculateGoalsAgainst(updatedScore.team_id, leagueId);
+        leagueTeam.goals_against = totalGoalsAgainst;
+        leagueTeam.goals_difference = leagueTeam.goals_for - leagueTeam.goals_against;
+
         await this.leagueTeamRepository.save(leagueTeam);
+
+        // Fetch the opposing team's score
+        const opposingScore = await this.scoreRepository.findOne({
+            where: {
+                match_id: updatedScore.match_id,
+                team_id: Not(updatedScore.team_id),
+            },
+        });
+
+        if (opposingScore) {
+            const opposingLeagueTeam = await this.leagueTeamRepository.findOne({
+                where: { team_id: opposingScore.team_id, league_id: leagueId }
+            });
+
+            if (opposingLeagueTeam) {
+                const opposingTotalPoints = await this.calculateTotalPoints(opposingScore.team_id);
+                opposingLeagueTeam.goals_for = opposingTotalPoints;
+
+                const opposingTotalGoalsAgainst = await this.calculateGoalsAgainst(opposingScore.team_id, leagueId);
+                opposingLeagueTeam.goals_against = opposingTotalGoalsAgainst;
+                opposingLeagueTeam.goals_difference = opposingLeagueTeam.goals_for - opposingLeagueTeam.goals_against;
+
+                // Adjust the opposing team's result
+                if (data.result && result.result !== data.result) {
+                    let opposingResult;
+                    switch (data.result) {
+                        case 'Win':
+                            opposingResult = 'Loss';
+                            break;
+                        case 'Loss':
+                            opposingResult = 'Win';
+                            break;
+                        case 'Draw':
+                            opposingResult = 'Draw';
+                            break;
+                    }
+                    this.adjustLeagueTeamStats(opposingLeagueTeam, result.result, -1); 
+                    this.adjustLeagueTeamStats(opposingLeagueTeam, opposingResult, 1);
+
+                    if (!result.result) {
+                        opposingLeagueTeam.played += 1;
+                    }
+
+                    opposingScore.result = opposingResult;
+                    await this.scoreRepository.save(opposingScore);
+                }
+
+                await this.leagueTeamRepository.save(opposingLeagueTeam);
+            }
+        } else {
+            throw new BadRequestException('Add opposing team for this match.');
+        }
     }
 
     return updatedScore;
@@ -110,6 +169,27 @@ export class ScoresService {
       });
 
       return scores.reduce((total, score) => total + (score.points || 0), 0);
+  }
+
+  private async calculateGoalsAgainst(team_id: number, leagueId: number): Promise<number> {
+      const matches = await this.scoreRepository.find({
+          where: { team_id }
+      });
+
+      let totalGoalsAgainst = 0;
+
+      for (const match of matches) {
+          const opposingScores = await this.scoreRepository.find({
+              where: {
+                  match_id: match.match_id,
+                  team_id: Not(team_id)
+              }
+          });
+
+          totalGoalsAgainst += opposingScores.reduce((total, score) => total + (score.points || 0), 0);
+      }
+
+      return totalGoalsAgainst;
   }
 
   // async update(id: number, data: Partial<Score>, leagueId: number): Promise<Score> {
