@@ -65,20 +65,25 @@ export class ScoresService {
     }
 
     const updatedScore = await this.scoreRepository.save({ ...result, ...data });
-    if (data.result && result.result !== data.result) {
-        const leagueTeam = await this.leagueTeamRepository.findOne({ 
-            where: { team_id: updatedScore.team_id, league_id: leagueId } 
-        });
-        if (leagueTeam) {
+
+    const leagueTeam = await this.leagueTeamRepository.findOne({ 
+        where: { team_id: updatedScore.team_id, league_id: leagueId } 
+    });
+    if (leagueTeam) {
+        const totalPoints = await this.calculateTotalPoints(updatedScore.team_id);
+        leagueTeam.goals_for = totalPoints;
+
+        if (data.result && result.result !== data.result) {
             this.adjustLeagueTeamStats(leagueTeam, result.result, -1);
             this.adjustLeagueTeamStats(leagueTeam, data.result, 1);
 
             if (!result.result) {
                 leagueTeam.played += 1;
             }
-            await this.leagueTeamRepository.save(leagueTeam);
-        } 
+        }
+        await this.leagueTeamRepository.save(leagueTeam);
     }
+
     return updatedScore;
   }
 
@@ -97,6 +102,14 @@ export class ScoresService {
               leagueTeam.points += change * 1;
               break;
       }
+  }
+
+  private async calculateTotalPoints(team_id: number): Promise<number> {
+      const scores = await this.scoreRepository.find({
+          where: { team_id }
+      });
+
+      return scores.reduce((total, score) => total + (score.points || 0), 0);
   }
 
   // async update(id: number, data: Partial<Score>, leagueId: number): Promise<Score> {
