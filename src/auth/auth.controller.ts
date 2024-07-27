@@ -8,6 +8,7 @@ import * as jwt from 'jsonwebtoken';
 import { LoginDto } from './dto/login-auth.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -26,7 +27,12 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
+  async login(@Body() loginDto: LoginDto): Promise<{ accessToken: string, refreshToken: string }> {
     return this.authService.loginUser(loginDto);
+  }
+
+  @Post('refresh')
+  async refresh(@Body() refreshTokenDto: RefreshTokenDto): Promise<{ accessToken: string }> {
+    return this.authService.refreshToken(refreshTokenDto);
   }
 }

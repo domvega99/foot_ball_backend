@@ -31,4 +31,7 @@ export class User {
 
     @Column({ nullable: true })
     socialId: string;
+
+    @Column({ nullable: true })
+    refreshToken?: string;
 }
