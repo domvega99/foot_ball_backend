@@ -192,63 +192,6 @@ export class ScoresService {
       return totalGoalsAgainst;
   }
 
-  // async update(id: number, data: Partial<Score>, leagueId: number): Promise<Score> {
-  //   const result = await this.findById(id);
-
-  //   if (data.match_id && data.team_id) {
-  //       const existingScore = await this.scoreRepository.findOne({
-  //           where: {
-  //               match_id: data.match_id,
-  //               team_id: data.team_id,
-  //           },
-  //       });
-
-  //       if (existingScore && existingScore.id !== id) {
-  //           throw new BadRequestException('This team already exists in this match.');
-  //       }
-  //   }
-
-  //   const updatedScore = await this.scoreRepository.save({ ...result, ...data });
-
-  //   if (data.result === 'Win' && result.result !== 'Win') {
-  //     const leagueTeam = await this.leagueTeamRepository.findOne({ where: { team_id: updatedScore.team_id, league_id: leagueId } });
-  //     if (leagueTeam) {
-  //       leagueTeam.won += 1;
-  //       await this.leagueTeamRepository.save(leagueTeam);
-  //     }
-  //   } else if (data.result === 'Loss' && result.result !== 'Loss') {
-  //     const leagueTeam = await this.leagueTeamRepository.findOne({ where: { team_id: updatedScore.team_id, league_id: leagueId } });
-  //     if (leagueTeam) {
-  //       leagueTeam.lost += 1;
-  //       await this.leagueTeamRepository.save(leagueTeam);
-  //     }
-  //   } else if (data.result === 'Draw' && result.result !== 'Draw') {
-  //     const leagueTeam = await this.leagueTeamRepository.findOne({ where: { team_id: updatedScore.team_id, league_id: leagueId } });
-  //     if (leagueTeam) {
-  //       leagueTeam.drawn += 1;
-  //       await this.leagueTeamRepository.save(leagueTeam);
-  //     }
-  //   } 
-
-
-  //   if (data.result === 'Loss' && result.result === 'Win') {
-  //     const leagueTeam = await this.leagueTeamRepository.findOne({ where: { team_id: updatedScore.team_id, league_id: leagueId } });
-  //     if (leagueTeam) {
-  //       leagueTeam.won -= 1;
-  //       await this.leagueTeamRepository.save(leagueTeam);
-  //     }
-  //   } else if (data.result === 'Loss' && result.result === 'Draw') {
-  //     const leagueTeam = await this.leagueTeamRepository.findOne({ where: { team_id: updatedScore.team_id, league_id: leagueId } });
-  //     if (leagueTeam) {
-  //       leagueTeam.drawn -= 1;
-  //       await this.leagueTeamRepository.save(leagueTeam);
-  //     }
-  //   } 
-    
-
-  //   return updatedScore;
-  // }
-
   async remove(id: number): Promise<void> {
     const team = await this.findById(id);
     await this.scoreRepository.remove(team);
