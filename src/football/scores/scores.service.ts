@@ -52,6 +52,7 @@ export class ScoresService {
 
   async update(id: number, data: Partial<Score>, leagueId: number): Promise<Score> {
     const result = await this.findById(id);
+
     if (data.match_id && data.team_id) {
         const existingScore = await this.scoreRepository.findOne({
             where: {
@@ -59,6 +60,7 @@ export class ScoresService {
                 team_id: data.team_id,
             },
         });
+
         if (existingScore && existingScore.id !== id) {
             throw new BadRequestException('This team already exists in this match.');
         }
@@ -71,7 +73,7 @@ export class ScoresService {
     });
 
     if (leagueTeam) {
-        const totalPoints = await this.calculateTotalPoints(updatedScore.team_id);
+        const totalPoints = await this.calculateTotalPoints(updatedScore.team_id, leagueId);
         leagueTeam.goals_for = totalPoints;
 
         if (data.result && result.result !== data.result) {
@@ -83,7 +85,6 @@ export class ScoresService {
             }
         }
 
-        // Calculate goals against
         const totalGoalsAgainst = await this.calculateGoalsAgainst(updatedScore.team_id, leagueId);
         leagueTeam.goals_against = totalGoalsAgainst;
         leagueTeam.goals_difference = leagueTeam.goals_for - leagueTeam.goals_against;
@@ -104,28 +105,25 @@ export class ScoresService {
             });
 
             if (opposingLeagueTeam) {
-                const opposingTotalPoints = await this.calculateTotalPoints(opposingScore.team_id);
+                const opposingTotalPoints = await this.calculateTotalPoints(opposingScore.team_id, leagueId);
                 opposingLeagueTeam.goals_for = opposingTotalPoints;
 
                 const opposingTotalGoalsAgainst = await this.calculateGoalsAgainst(opposingScore.team_id, leagueId);
                 opposingLeagueTeam.goals_against = opposingTotalGoalsAgainst;
                 opposingLeagueTeam.goals_difference = opposingLeagueTeam.goals_for - opposingLeagueTeam.goals_against;
 
-                // Adjust the opposing team's result
                 if (data.result && result.result !== data.result) {
-                    let opposingResult;
-                    switch (data.result) {
-                        case 'Win':
-                            opposingResult = 'Loss';
-                            break;
-                        case 'Loss':
-                            opposingResult = 'Win';
-                            break;
-                        case 'Draw':
-                            opposingResult = 'Draw';
-                            break;
+                    this.adjustLeagueTeamStats(opposingLeagueTeam, opposingScore.result, -1);
+                    let opposingResult: string | null = null;
+
+                    if (data.result === 'Win') {
+                        opposingResult = 'Loss';
+                    } else if (data.result === 'Loss') {
+                        opposingResult = 'Win';
+                    } else if (data.result === 'Draw') {
+                        opposingResult = 'Draw';
                     }
-                    this.adjustLeagueTeamStats(opposingLeagueTeam, result.result, -1); 
+
                     this.adjustLeagueTeamStats(opposingLeagueTeam, opposingResult, 1);
 
                     if (!result.result) {
@@ -146,7 +144,8 @@ export class ScoresService {
     return updatedScore;
   }
 
-  private adjustLeagueTeamStats(leagueTeam: LeagueTeam, result: string, change: number): void {
+  private adjustLeagueTeamStats(leagueTeam: LeagueTeam, result: string | null, change: number): void {
+      if (!result) return;
       switch (result) {
           case 'Win':
               leagueTeam.won += change;
@@ -163,9 +162,9 @@ export class ScoresService {
       }
   }
 
-  private async calculateTotalPoints(team_id: number): Promise<number> {
+  private async calculateTotalPoints(team_id: number, leagueId: number): Promise<number> {
       const scores = await this.scoreRepository.find({
-          where: { team_id }
+          where: { team_id, match: { league_id: leagueId } }
       });
 
       return scores.reduce((total, score) => total + (score.points || 0), 0);
@@ -173,7 +172,7 @@ export class ScoresService {
 
   private async calculateGoalsAgainst(team_id: number, leagueId: number): Promise<number> {
       const matches = await this.scoreRepository.find({
-          where: { team_id }
+          where: { team_id, match: { league_id: leagueId } }
       });
 
       let totalGoalsAgainst = 0;
@@ -182,7 +181,8 @@ export class ScoresService {
           const opposingScores = await this.scoreRepository.find({
               where: {
                   match_id: match.match_id,
-                  team_id: Not(team_id)
+                  team_id: Not(team_id),
+                  match: { league_id: leagueId }
               }
           });
 
