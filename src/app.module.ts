@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TeamsModule } from './football/teams/teams.module';
-import { PagesModule } from './pages/pages.module';
 import { UploadModule } from './upload/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -24,6 +23,7 @@ import { ContentRoleMiddleware } from './middleware/content.role.middleware';
 import { SquadsModule } from './football/squads/squads.module';
 import { TeamAboutModule } from './football/team_about/team_about.module';
 import { GalleryModule } from './football/gallery/gallery.module';
+import { PagesModule } from './football/pages/pages.module';
 
 @Module({
   imports: [
@@ -40,8 +40,8 @@ import { GalleryModule } from './football/gallery/gallery.module';
       secret: 'your-secret-key',
       signOptions: { expiresIn: '1h' },
     }),
-    TeamsModule,
     PagesModule,
+    TeamsModule,
     UploadModule,
     AuthModule,
     UsersModule,
