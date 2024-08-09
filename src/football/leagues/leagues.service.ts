@@ -57,6 +57,7 @@ export class LeaguesService {
       .leftJoinAndSelect('score.team', 'team')
       .where('league.status = :leagueStatus', { leagueStatus: 'Posted' })
       .orderBy('match.match_date', 'ASC') 
+      .addOrderBy('match.match_time', 'ASC')
       .getMany();
 
     leagues.forEach((league: any) => {
