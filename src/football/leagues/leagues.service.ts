@@ -50,7 +50,7 @@ export class LeaguesService {
   async getPostedLeaguesWithPostedMatches(): Promise<League[]> {
     const leagues = await this.leagueRepository
       .createQueryBuilder('league')
-      .leftJoinAndSelect('league.matches', 'match', 'match.status = :matchStatus')
+      .leftJoinAndSelect('league.matches', 'match')
       .leftJoinAndSelect('match.scores', 'score')
       .leftJoinAndSelect('score.team', 'team')
       .where('league.status = :leagueStatus', { leagueStatus: 'Posted' })
