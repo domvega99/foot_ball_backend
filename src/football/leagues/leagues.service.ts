@@ -49,16 +49,18 @@ export class LeaguesService {
 
   async getPostedLeaguesWithPostedMatches(): Promise<League[]> {
     const leagues = await this.leagueRepository
-      .createQueryBuilder('league')
-      .leftJoinAndSelect('league.matches', 'match', 'match.status IN (:...matchStatuses)', {
-        matchStatuses: ['Posted', 'Completed'],
-      })
-      .leftJoinAndSelect('match.scores', 'score')
-      .leftJoinAndSelect('score.team', 'team')
-      .where('league.status = :leagueStatus', { leagueStatus: 'Posted' })
-      .orderBy('match.match_date', 'ASC') 
-      .addOrderBy('match.match_time', 'ASC')
-      .getMany();
+        .createQueryBuilder('league')
+        .leftJoinAndSelect('league.matches', 'match', 'match.status IN (:...matchStatuses)', {
+            matchStatuses: ['Posted', 'Completed', 'Live'],
+        })
+        .leftJoinAndSelect('match.scores', 'score')
+        .leftJoinAndSelect('score.team', 'team')
+        .leftJoinAndSelect('score.playerScores', 'playerScore') 
+        .leftJoinAndSelect('playerScore.player', 'player') 
+        .where('league.status = :leagueStatus', { leagueStatus: 'Posted' })
+        .orderBy('match.match_date', 'ASC')
+        .addOrderBy('match.match_time', 'ASC')
+        .getMany();
 
       leagues.forEach((league: any) => {
           const groupedMatches = new Map<string, Match[]>();
