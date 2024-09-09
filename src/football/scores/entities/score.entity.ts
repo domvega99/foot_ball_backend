@@ -1,7 +1,6 @@
 import { Match } from 'src/football/matches/entities/match.entity';
-import { PlayerScore } from 'src/football/player_score/entities/player_score.entity';
 import { Team } from 'src/football/teams/entities/team.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
 export class Score {
@@ -27,7 +26,4 @@ export class Score {
     @ManyToOne(() => Team, team => team.scores)
     @JoinColumn({ name: 'team_id' }) 
     team: Team;
-
-    @OneToMany(() => PlayerScore, playerScore => playerScore.score)
-    playerScores: PlayerScore[];
 }

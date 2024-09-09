@@ -24,7 +24,6 @@ import { SquadsModule } from './football/squads/squads.module';
 import { TeamAboutModule } from './football/team_about/team_about.module';
 import { GalleryModule } from './football/gallery/gallery.module';
 import { PagesModule } from './football/pages/pages.module';
-import { PlayerScoreModule } from './football/player_score/player_score.module';
 
 @Module({
   imports: [
@@ -53,7 +52,6 @@ import { PlayerScoreModule } from './football/player_score/player_score.module';
     ScoresModule,
     ContentModule,
     SquadsModule,
-    PlayerScoreModule,
     TeamAboutModule,
     GalleryModule,
   ],

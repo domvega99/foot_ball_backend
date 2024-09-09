@@ -36,7 +36,7 @@ export class LeaguesService {
   }
 
 
-  async findAllLeaguesWithTeams(): Promise<League[]> { 
+  async findAllLeaguesWithTeams(): Promise<League[]> { // display table in admin
     return await this.leagueRepository
       .createQueryBuilder('league')
       .leftJoinAndSelect('league.teams', 'leagueTeam')
@@ -49,76 +49,36 @@ export class LeaguesService {
 
   async getPostedLeaguesWithPostedMatches(): Promise<League[]> {
     const leagues = await this.leagueRepository
-        .createQueryBuilder('league')
-        .leftJoinAndSelect('league.matches', 'match', 'match.status IN (:...matchStatuses)', {
-            matchStatuses: ['Posted', 'Completed', 'Live'],
-        })
-        .leftJoinAndSelect('match.scores', 'score')
-        .leftJoinAndSelect('score.team', 'team')
-        .leftJoinAndSelect('score.playerScores', 'playerScore') 
-        .leftJoinAndSelect('playerScore.player', 'player') 
-        .where('league.status = :leagueStatus', { leagueStatus: 'Posted' })
-        .orderBy('match.match_date', 'ASC')
-        .addOrderBy('match.match_time', 'ASC')
-        .getMany();
+      .createQueryBuilder('league')
+      .leftJoinAndSelect('league.matches', 'match')
+      .leftJoinAndSelect('match.scores', 'score')
+      .leftJoinAndSelect('score.team', 'team')
+      .where('league.status = :leagueStatus', { leagueStatus: 'Posted' })
+      .orderBy('match.match_date', 'ASC') 
+      .addOrderBy('match.match_time', 'ASC')
+      .getMany();
 
-      leagues.forEach((league: any) => {
-          const groupedMatches = new Map<string, Match[]>();
+    leagues.forEach((league: any) => {
+      const groupedMatches = new Map<string, Match[]>(); 
 
-          league.matches.forEach((match) => {
-              const matchDate = new Date(match.match_date);
-              const formattedDate = matchDate.toISOString().split('T')[0];
+      league.matches.forEach((match) => {
+        const matchDate = new Date(match.match_date); 
+        const formattedDate = matchDate.toISOString().split('T')[0]; 
 
-              if (!groupedMatches.has(formattedDate)) {
-                  groupedMatches.set(formattedDate, []);
-              }
-              groupedMatches.get(formattedDate).push(match);
-          });
-
-          league.matches = Array.from(groupedMatches, ([matchDate, matches]) => ({
-              match_date: matches[0].match_date,
-              matches: matches,
-          }));
+        if (!groupedMatches.has(formattedDate)) {
+          groupedMatches.set(formattedDate, []);
+        }
+        groupedMatches.get(formattedDate).push(match);
       });
 
-      return leagues;
+      league.matches = Array.from(groupedMatches, ([matchDate, matches]) => ({
+        match_date: matches[0].match_date, 
+        matches: matches,
+      }));
+    });
+
+    return leagues;
   }
-
-
-  // async getPostedLeaguesWithPostedMatches(): Promise<League[]> {
-  //   const leagues = await this.leagueRepository
-  //     .createQueryBuilder('league')
-  //     .leftJoinAndSelect('league.matches', 'match', 'match.status IN (:...matchStatuses)', {
-	// 			matchStatuses: ['Posted', 'Completed', 'Live'],
-	// 		})
-  //     .leftJoinAndSelect('match.scores', 'score')
-  //     .leftJoinAndSelect('score.team', 'team')
-  //     .where('league.status = :leagueStatus', { leagueStatus: 'Posted' })
-  //     .orderBy('match.match_date', 'ASC') 
-  //     .addOrderBy('match.match_time', 'ASC')
-  //     .getMany();
-
-  //   leagues.forEach((league: any) => {
-  //     const groupedMatches = new Map<string, Match[]>(); 
-
-  //     league.matches.forEach((match) => {
-  //       const matchDate = new Date(match.match_date); 
-  //       const formattedDate = matchDate.toISOString().split('T')[0]; 
-
-  //       if (!groupedMatches.has(formattedDate)) {
-  //         groupedMatches.set(formattedDate, []);
-  //       }
-  //       groupedMatches.get(formattedDate).push(match);
-  //     });
-
-  //     league.matches = Array.from(groupedMatches, ([matchDate, matches]) => ({
-  //       match_date: matches[0].match_date, 
-  //       matches: matches,
-  //     }));
-  //   });
-
-  //   return leagues;
-  // }
   
   async findById(id: number): Promise<League> {
     const league = await this.leagueRepository.findOne({ where: { id: id } });
