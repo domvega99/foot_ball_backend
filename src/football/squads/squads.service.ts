@@ -27,6 +27,10 @@ export class SquadsService {
     return squad;
   }
 
+  async findByTeamId(teamId: number): Promise<Squad[]> {
+    return this.squadRepository.find({ where: { team_id: teamId } });
+  }
+
   async update(id: number, data: Partial<Squad>): Promise<Squad> {
     const squad = await this.findById(id);
     return this.squadRepository.save({ ...squad, ...data });

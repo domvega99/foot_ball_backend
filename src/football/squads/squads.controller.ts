@@ -25,6 +25,11 @@ export class SquadsController {
     return this.squadsService.findById(parseInt(id, 10));
   }
 
+  @Get('team/:teamId')
+  async findByTeamId(@Param('teamId') teamId: number): Promise<Squad[]> {
+    return this.squadsService.findByTeamId(teamId);
+  }
+
   @Patch(':id')
   async update(
     @Param('id') id: string,
