@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Coach } from 'src/football/coaches/entities/coach.entity';
+import { Role } from 'src/roles/entities/role.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne } from 'typeorm';
 
 @Entity()
 export class User {
@@ -34,4 +36,11 @@ export class User {
 
     @Column({ nullable: true })
     refreshToken?: string;
+
+    // @ManyToOne(() => Role, (role) => role.users)
+    // role: Role;
+
+    @OneToOne(() => Coach, (coach) => coach.user)
+    coach: Coach;
+
 }
