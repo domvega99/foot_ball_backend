@@ -34,4 +34,7 @@ export class Squad {
 
     @Column({ default: 1 })
     stat: number;
+
+    @Column({ default: 0 })
+    jersey_no: number;
 }
