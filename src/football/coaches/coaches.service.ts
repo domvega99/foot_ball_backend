@@ -1,26 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCoachDto } from './dto/create-coach.dto';
 import { UpdateCoachDto } from './dto/update-coach.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Coach } from './entities/coach.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CoachesService {
-  create(createCoachDto: CreateCoachDto) {
-    return 'This action adds a new coach';
+  constructor(
+    @InjectRepository(Coach)
+    private coachRepository: Repository<Coach>,
+  ) {}
+
+  async create(data: Partial<Coach>): Promise<Coach> {
+    const result = this.coachRepository.create(data);
+    return this.coachRepository.save(result);
   }
 
-  findAll() {
-    return `This action returns all coaches`;
+  async findAll(): Promise<Coach[]> {
+    return this.coachRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} coach`;
+  async findById(id: number): Promise<Coach> {
+    const result = await this.coachRepository.findOne({ where: { id: id } });
+    if (!result) {
+      throw new NotFoundException('Coach not found');
+    }
+    return result;
   }
 
-  update(id: number, updateCoachDto: UpdateCoachDto) {
-    return `This action updates a #${id} coach`;
+  async update(id: number, data: Partial<Coach>): Promise<Coach> {
+    const result = await this.findById(id);
+    return this.coachRepository.save({ ...result, ...data });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} coach`;
+  async remove(id: number): Promise<void> {
+    const result = await this.findById(id);
+    await this.coachRepository.remove(result);
   }
+
 }

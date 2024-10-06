@@ -2,33 +2,37 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CoachesService } from './coaches.service';
 import { CreateCoachDto } from './dto/create-coach.dto';
 import { UpdateCoachDto } from './dto/update-coach.dto';
+import { Coach } from './entities/coach.entity';
 
-@Controller('coaches')
+@Controller('football/coaches')
 export class CoachesController {
   constructor(private readonly coachesService: CoachesService) {}
 
   @Post()
-  create(@Body() createCoachDto: CreateCoachDto) {
-    return this.coachesService.create(createCoachDto);
+  async create(@Body() data: Partial<Coach>): Promise<Coach> {
+    return this.coachesService.create(data);
   }
 
   @Get()
-  findAll() {
+  async findAll(): Promise<Coach[]> {
     return this.coachesService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coachesService.findOne(+id);
+  async findById(@Param('id') id: string): Promise<Coach> {
+    return this.coachesService.findById(parseInt(id, 10));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCoachDto: UpdateCoachDto) {
-    return this.coachesService.update(+id, updateCoachDto);
+  async update(
+    @Param('id') id: number,
+    @Body() data: Partial<Coach>,
+  ): Promise<Coach> {
+    return this.coachesService.update(id, data);
   }
-
+  
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.coachesService.remove(+id);
+  async remove(@Param('id') id: string): Promise<void> {
+    await this.coachesService.remove(+id);
   }
 }
