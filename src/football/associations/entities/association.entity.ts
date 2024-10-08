@@ -18,7 +18,7 @@ export class Association {
     address: string;
 
     @Column({ length: 5 })
-    zipcode: string;
+    zipCode: string;
 
     @Column({ length: 20 })
     city: string;

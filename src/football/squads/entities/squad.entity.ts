@@ -14,17 +14,23 @@ export class Squad {
     @Column({ type: 'varchar', length: 255 })
     last_name: string;
 
-    @Column({ type: 'varchar', length: 45 })
-    position: string;
-
-    @Column()
-    team_id: number;
-
     @Column({ nullable: true })
     birth_date: Date;
 
     @Column({ type: 'text' })
     birth_place: string;
+
+    @Column({ type: 'varchar', length: 255 })
+    address: string;
+
+    @Column({ type: 'varchar', length: 255 })
+    zipCode: string;
+
+    @Column({ type: 'varchar', length: 255 })
+    phone: string;
+
+    @Column({ type: 'varchar', length: 255 })
+    email: string;
 
     @Column()
     height: number;
@@ -37,4 +43,16 @@ export class Squad {
 
     @Column({ default: 0 })
     jersey_no: number;
+
+    @Column({ type: 'varchar', length: 45 })
+    position: string;
+
+    @Column()
+    team_id: number;
+
+    @Column()
+    clubId: number;
+
+    @Column()
+    userId: number;
 }
