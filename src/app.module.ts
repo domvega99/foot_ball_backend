@@ -28,6 +28,8 @@ import { AssociationsModule } from './football/associations/associations.module'
 import { TeamGroupsModule } from './football/team-groups/team-groups.module';
 import { TiersModule } from './football/tiers/tiers.module';
 import { AssociatenMembersModule } from './football/associaten-members/associaten-members.module';
+import { FootballYearModule } from './football/football-year/football-year.module';
+import { PlayerHistoryModule } from './football/player-history/player-history.module';
 
 @Module({
   imports: [
@@ -64,7 +66,9 @@ import { AssociatenMembersModule } from './football/associaten-members/associate
     AssociationsModule,
     TeamGroupsModule,
     TiersModule,
-    AssociatenMembersModule
+    AssociatenMembersModule,
+    FootballYearModule,
+    PlayerHistoryModule
   ],
   controllers: [AppController],
   providers: [AppService, AuthMiddleware], // Provide AuthMiddleware here if necessary
