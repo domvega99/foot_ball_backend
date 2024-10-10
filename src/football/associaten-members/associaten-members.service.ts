@@ -18,11 +18,11 @@ export class AssociatenMembersService {
   }
 
   async findAll(): Promise<AssociatenMember[]> {
-    return this.associatenMemberRepository.find();
+    return this.associatenMemberRepository.find({ relations: ['association'] });
   }
 
   async findById(id: number): Promise<AssociatenMember> {
-    const result = await this.associatenMemberRepository.findOne({ where: { id: id } });
+    const result = await this.associatenMemberRepository.findOne({ where: { id: id }, relations: ['association'] });
     if (!result) {
       throw new NotFoundException('Associaten member not found');
     }

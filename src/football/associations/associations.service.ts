@@ -18,11 +18,11 @@ export class AssociationsService {
   }
 
   async findAll(): Promise<Association[]> {
-    return this.associationRepository.find();
+    return this.associationRepository.find({ relations: ['members'] });
   }
 
   async findById(id: number): Promise<Association> {
-    const result = await this.associationRepository.findOne({ where: { id: id } });
+    const result = await this.associationRepository.findOne({ where: { id: id }, relations: ['members'] });
     if (!result) {
       throw new NotFoundException('Association not found');
     }

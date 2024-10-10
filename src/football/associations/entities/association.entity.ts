@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { AssociatenMember } from 'src/football/associaten-members/entities/associaten-member.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class Association {
@@ -37,4 +38,7 @@ export class Association {
 
     @Column({ nullable: true })
     modifiedBy: number;
+
+    @OneToMany(() => AssociatenMember, member => member.association)
+    members: AssociatenMember[];
 }

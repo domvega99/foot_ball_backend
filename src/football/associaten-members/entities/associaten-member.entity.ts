@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Association } from 'src/football/associations/entities/association.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class AssociatenMember {
@@ -14,7 +15,7 @@ export class AssociatenMember {
     @Column({ length: 255 })
     lastName: string;
 
-    @Column()
+    @Column({ nullable: true })
     birthDate: Date;
 
     @Column({ length: 255 })
@@ -52,4 +53,7 @@ export class AssociatenMember {
 
     @Column({ nullable: true })
     modifiedBy: number;
+
+    @ManyToOne(() => Association, association => association.members)
+    association: Association;
 }
