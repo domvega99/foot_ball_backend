@@ -5,22 +5,22 @@ export class Association {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 20 })
+    @Column({ length: 255 })
     orgName: string;
 
     @Column()
     headOrg: number;
 
-    @Column({ length: 50 })
+    @Column({ length: 255 })
     province: string;
 
-    @Column({ length: 50 })
+    @Column({ length: 255 })
     address: string;
 
-    @Column({ length: 5 })
+    @Column({ length: 255 })
     zipCode: string;
 
-    @Column({ length: 20 })
+    @Column({ length: 255 })
     city: string;
 
     @Column({ default: 1 })
