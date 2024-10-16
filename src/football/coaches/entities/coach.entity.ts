@@ -15,26 +15,23 @@ export class Coach {
     @Column({ length: 50 })
     lastName: string;
 
-    @Column({ type: 'date' })
-    birthday: Date;
+    @Column()
+    birthDate: Date;
 
     @Column({ length: 50 })
     birthPlace: string;
 
     @Column({ length: 50 })
-    pffnr: string;
-
-    @Column({ length: 50 })
     address: string;
 
-    @Column({ length: 5 })
-    zipcode: string;
+    @Column({ length: 50 })
+    zipCode: string;
 
     @Column()
     phone: number;
 
     @Column({ length: 30 })
-    mail: string;
+    email: string;
 
     @Column({ nullable: true })
     userId: number; 
