@@ -15,7 +15,7 @@ export class Coach {
     @Column({ length: 50 })
     lastName: string;
 
-    @Column()
+    @Column({ nullable: true })
     birthDate: Date;
 
     @Column({ length: 50 })
