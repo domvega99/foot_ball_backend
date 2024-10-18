@@ -38,4 +38,11 @@ export class FriendlyMatchesService {
     const result = await this.findById(id);
     await this.friendlyMatchRepository.remove(result);
   }
+
+  async findAllByLeagueId(leagueId: number): Promise<FriendlyMatch[]> {
+    return this.friendlyMatchRepository.find({ 
+      where: { stat: 1, league_id: leagueId }, 
+      order: { match_date: 'DESC', match_time: 'ASC' }
+    });
+  }
 }

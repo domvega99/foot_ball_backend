@@ -35,4 +35,9 @@ export class FriendlyMatchesController {
   async remove(@Param('id') id: string): Promise<void> {
     await this.friendlyMatchesService.remove(+id);
   }
+
+  @Get('league/:leagueId')
+  async findAllByLeagueId(@Param('leagueId') leagueId: number): Promise<FriendlyMatch[]> {
+    return this.friendlyMatchesService.findAllByLeagueId(leagueId);
+  }
 }
