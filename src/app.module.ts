@@ -31,6 +31,7 @@ import { AssociatenMembersModule } from './football/associaten-members/associate
 import { FootballYearModule } from './football/football-year/football-year.module';
 import { PlayerHistoryModule } from './football/player-history/player-history.module';
 import { ClubsModule } from './football/clubs/clubs.module';
+import { FriendlyMatchesModule } from './football/friendly_matches/friendly_matches.module';
 
 @Module({
   imports: [
@@ -70,7 +71,8 @@ import { ClubsModule } from './football/clubs/clubs.module';
     AssociatenMembersModule,
     FootballYearModule,
     PlayerHistoryModule,
-    ClubsModule
+    ClubsModule,
+    FriendlyMatchesModule
   ],
   controllers: [AppController],
   providers: [AppService, AuthMiddleware], // Provide AuthMiddleware here if necessary
