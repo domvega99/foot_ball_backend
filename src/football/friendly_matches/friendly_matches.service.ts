@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFriendlyMatchDto } from './dto/create-friendly_match.dto';
 import { UpdateFriendlyMatchDto } from './dto/update-friendly_match.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,7 +18,7 @@ export class FriendlyMatchesService {
   }
 
   async findAll(): Promise<FriendlyMatch[]> {
-    return this.friendlyMatchRepository.find();
+    return this.friendlyMatchRepository.find({ relations: ['teamA', 'teamB'] });
   }
 
   async findById(id: number): Promise<FriendlyMatch> {
@@ -31,6 +31,9 @@ export class FriendlyMatchesService {
 
   async update(id: number, data: Partial<FriendlyMatch>): Promise<FriendlyMatch> {
     const result = await this.findById(id);
+    if (result.teamAId === data.teamBId || result.teamBId === data.teamAId) {
+      throw new BadRequestException('This team already exist in this match.');
+    }
     return this.friendlyMatchRepository.save({ ...result, ...data });
   }
 
@@ -42,7 +45,8 @@ export class FriendlyMatchesService {
   async findAllByLeagueId(leagueId: number): Promise<FriendlyMatch[]> {
     return this.friendlyMatchRepository.find({ 
       where: { stat: 1, league_id: leagueId }, 
-      order: { match_date: 'DESC', match_time: 'ASC' }
+      order: { match_date: 'DESC', match_time: 'ASC' },
+      relations: ['teamA', 'teamB']
     });
   }
 }

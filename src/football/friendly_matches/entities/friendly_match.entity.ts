@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Team } from 'src/football/teams/entities/team.entity';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class FriendlyMatch {
@@ -17,11 +18,19 @@ export class FriendlyMatch {
     @Column({ type: 'varchar', length: 255 })
     location: string;
 
-    @Column() 
-    teamA: string;
+    @Column({ nullable: true }) 
+    teamAId: number;
 
-    @Column() 
-    teamB: string;
+    @ManyToOne(() => Team) 
+    @JoinColumn({ name: 'teamAId' })
+    teamA: Team;
+
+    @Column({ nullable: true }) 
+    teamBId: number;
+
+    @ManyToOne(() => Team) 
+    @JoinColumn({ name: 'teamBId' })
+    teamB: Team;
 
     @Column() 
     scoreA: number;
