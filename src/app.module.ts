@@ -25,6 +25,7 @@ import { TeamAboutModule } from './football/team_about/team_about.module';
 import { GalleryModule } from './football/gallery/gallery.module';
 import { PagesModule } from './football/pages/pages.module';
 import { PlayerScoreModule } from './football/player_score/player_score.module';
+import { FriendlyMatchesModule } from './football/friendly_matches/friendly_matches.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { PlayerScoreModule } from './football/player_score/player_score.module';
     PlayerScoreModule,
     TeamAboutModule,
     GalleryModule,
+    FriendlyMatchesModule
   ],
   controllers: [AppController],
   providers: [AppService, AuthMiddleware], // Provide AuthMiddleware here if necessary
