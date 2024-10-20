@@ -13,6 +13,7 @@ export class FriendlyMatchesService {
   ) {}
 
   async create(data: Partial<FriendlyMatch>): Promise<FriendlyMatch> {
+    data.status = 'Draft';
     const result = this.friendlyMatchRepository.create(data);
     return this.friendlyMatchRepository.save(result);
   }

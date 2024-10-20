@@ -38,8 +38,8 @@ export class FriendlyMatch {
     @Column() 
     scoreB: number;
 
-    @Column() 
-    teamResult: number;
+    @Column({ type: 'varchar', length: 45 }) 
+    teamResult: string;
 
     @Column({ nullable: true })
     created_on: Date;
