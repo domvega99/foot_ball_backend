@@ -72,7 +72,10 @@ export class LeaguesService {
               if (!groupedMatches.has(formattedDate)) {
                   groupedMatches.set(formattedDate, []);
               }
-              groupedMatches.get(formattedDate).push(match);
+              groupedMatches.get(formattedDate).push({
+                ...match,
+                league_title: league.title,
+              });
           });
 
           league.matches = Array.from(groupedMatches, ([matchDate, matches]) => ({
