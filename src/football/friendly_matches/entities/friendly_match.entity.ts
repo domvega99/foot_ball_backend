@@ -58,4 +58,7 @@ export class FriendlyMatch {
 
     @Column({ type: 'varchar', length: 45, nullable: true })
     status: string;
+
+    @Column({ type: 'varchar', length: 255 })
+    match_title: string;
 }
