@@ -32,7 +32,6 @@ import { FootballYearModule } from './football/football-year/football-year.modul
 import { PlayerHistoryModule } from './football/player-history/player-history.module';
 import { ClubsModule } from './football/clubs/clubs.module';
 import { FriendlyMatchesModule } from './football/friendly_matches/friendly_matches.module';
-import { FriendlyMatchesModule } from './football/friendly_matches/friendly_matches.module';
 
 @Module({
   imports: [
@@ -73,7 +72,6 @@ import { FriendlyMatchesModule } from './football/friendly_matches/friendly_matc
     FootballYearModule,
     PlayerHistoryModule,
     ClubsModule,
-    FriendlyMatchesModule
     FriendlyMatchesModule
   ],
   controllers: [AppController],
